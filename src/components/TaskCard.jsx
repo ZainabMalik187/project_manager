@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
-function Task({
+import { useDraggable } from '@dnd-kit/core';
+function TaskCard({
+  id,
   title,
   description,
   status,
@@ -10,8 +12,16 @@ function Task({
   onDelete,
   onComplete,
 }) {
+  const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+    id,
+  });
   return (
-    <div className={`task ${status}`}>
+    <div
+      ref={setNodeRef}
+      {...attributes}
+      {...listeners}
+      className={`task ${status} ${isDragging ? 'dragging' : ''}`}
+    >
       <h3>{title}</h3>
       <p>{description}</p>
       <div className="task-details">
@@ -27,7 +37,8 @@ function Task({
     </div>
   );
 }
-Task.propTypes = {
+TaskCard.propTypes = {
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string,
   status: PropTypes.string,
@@ -38,4 +49,4 @@ Task.propTypes = {
   onDelete: PropTypes.func,
   onComplete: PropTypes.func,
 };
-export default Task;
+export default TaskCard;
